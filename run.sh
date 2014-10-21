@@ -19,13 +19,15 @@ if [ $isgiturl == 1 ]; then
         exit 1
     }
     cd $workdir && \
-    gemname=$(ls *.gemspec | cut -f1 -d\.) && \
-    bundle_gemfile=$PWD/Gemfile && \
-    gem build ${gemname}.gemspec && \
+    bundle_gemfile=${workdir}/Gemfile && \
     bundle install --path=${bundle_path:-vendor/bundle} && \
+    gem build *.gemspec && \
     gem2deb *.gem && \
+    mv *.deb /data/ && \
     echo 'done!'
 else
-    gem2deb $GEM_SRC
+    cd $workdir && \
+    gem2deb $GEM_SRC && \
+    mv *.deb /data/ && \
     echo 'done!'
 fi
